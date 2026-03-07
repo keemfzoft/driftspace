@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tokenizer</title>
+</head>
+<body>
+    <script>
+        const vocabulary = {
+            "[UNK]": 0,
+            "the": 1,
+            "cat": 2,
+            "sat": 3,
+            "on": 4,
+            "mat": 5,
+            "dog": 6,
+        };
+
+        function tokenize(input) {
+            const normalized = input.toLowerCase();
+
+            return normalized.split(" ").map(word => vocabulary[word] ?? vocabulary["[UNK]"]);
+        }
+
+        console.log(tokenize("the cat sat on the mat"));
+        console.log(tokenize("the dog sat on the mat"));
+        console.log(tokenize("the cat sat today"));
+    </script>
+</body>
+</html>
