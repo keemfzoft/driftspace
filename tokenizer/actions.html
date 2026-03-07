@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tokenizer</title>
+</head>
+<body>
+    <script>
+        const vocabulary = {
+            "[UNK]": 0,
+            "[ACTION:ALERT]": 1,
+            "[ACTION:RESTART]": 2,
+            "200": 3,
+            "404": 4,
+            "500": 5,
+            "timeout": 6,
+            "success": 7,
+            "error": 8,
+        };
+
+        // Reverse the vocabulary indices
+        const lookup = Object.fromEntries(Object.entries(vocabulary).map(([word, id]) => [id, word]));
+
+        console.log(lookup);
+
+        function tokenize(input) {
+            const normalized = input.toLowerCase();
+
+            return normalized.split(" ").map(word => vocabulary[word] ?? vocabulary["[UNK]"]);
+        }
+
+        function decode(output) {
+            return output.map(id => lookup[id] ?? "[UNK]").join(" ");
+        }
+
+        function decode2(output) {
+            return output
+                .map(id => {
+                    for (const [word, wid] of Object.entries(vocabulary)) {
+                        if (wid === id) return word;
+                    }
+
+                    return "[UNK]";
+                })
+                .join(" ");
+        }
+
+        console.log(tokenize("404 error"));
+        console.log(decode([5, 2]));
+        console.log(decode2([4, 1]));
+    </script>
+</body>
+</html>
