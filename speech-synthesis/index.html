@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speech Synthesis</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+        #waypoint {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background: #2c3e50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2em;
+            transition: opacity 1s ease;
+            cursor: pointer;
+            z-index: 210;
+        }
+
+        #waypoint.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #workspace {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 50px;
+            cursor: pointer;
+            z-index: 0;
+
+            #avatar {
+                position: absolute;
+                width: 200px;
+                height: 200px;
+                right: 50px;
+                bottom: 50px;
+            }
+        }
+
+        .bounce {
+            animation: float 3s infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="waypoint">
+        <div>Log in to Lab</div>
+    </div>
+    <div id="workspace">
+        <img id="avatar" src="./robot-face.png" class="bounce" />
+    </div>
+
+    <script>
+        const waypoint = document.getElementById("waypoint");
+
+        // Ensure voices are loaded
+        speechSynthesis.onvoiceschanged = () => {
+            console.log("Voices ready:", speechSynthesis.getVoices());
+        };
+
+        waypoint.addEventListener("click", () => {
+            const msg = new SpeechSynthesisUtterance("Hello there! I'm Blue, your personal assistant. This is a test speech synthesis native in browsers.");
+            const voices = speechSynthesis.getVoices();
+
+            // Pick a safe default voice if available
+            if (voices.length) {
+                //msg.voice = voices.find(v => v.lang.startsWith("en")) || voices[0];
+                msg.voice = voices[6];
+            }
+            
+            waypoint.classList.add("fade-out");
+
+            setTimeout(() => {
+                speechSynthesis.cancel(); // clear any stuck queue
+                speechSynthesis.speak(msg);
+            }, 500);
+        });
+    </script>
+</body>
+</html>
