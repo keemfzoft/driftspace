@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neural Network</title>
+</head>
+<body>
+    <svg id="canvas" width="800" height="800"></svg>
+    
+    <script type="module">
+        import { KneuralNetwork } from "./KneuralNetwork.js";
+
+        let kneural = new KneuralNetwork({
+            input: 3,
+            topology: 4,
+            output: 5,
+        });
+
+        kneural.create();
+        kneural.stimulate([0.5, 0.5, 0.5]);
+        kneural.pulsate();
+
+        console.log(kneural.stimuli());
+
+        kneural.visualize();
+    </script>
+</body>
+</html>
