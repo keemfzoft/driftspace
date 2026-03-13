@@ -22,6 +22,10 @@ class Kneuron {
     activation() {
         return 1 / (1 + Math.exp(-this.impulse));   // Sigmoid function
     }
+
+    correction() {
+        return this.impulse * (1 - this.impulse);
+    }
 }
 
 class Synapse {
@@ -38,6 +42,7 @@ export class KneuralNetwork {
         this.inputs = [];
         this.interkneurons = [];
         this.outputs = [];
+        this.learningRate = 0.25;
     }
 
     create() {
@@ -119,6 +124,125 @@ export class KneuralNetwork {
         }
 
         return impulses;
+    }
+
+    train(inputSample, outputSample) {
+        let i = 0;
+        let fault = null;
+        let desire = null;
+        let correction = null;
+
+        this.stimulate(inputSample);
+        this.pulsate();
+
+        let faults = new Array(this.outputs.length);
+
+        for (let output of this.outputs) {
+            desire = outputSample[i];
+
+            let impulse = output.impulse;
+
+            fault = desire - impulse;
+
+            faults[i] = fault;
+
+            i++;
+        }
+
+        let corrections = new Array(this.outputs.length);
+
+        i = 0;
+
+        for (let output of this.outputs) {
+            correction = output.correction() * faults[i] * this.learningRate;
+
+            corrections[i] = correction;
+
+            i++;
+        }
+
+        i = 0;
+
+        for (let output of this.outputs) {
+            let synapses = output.inputs;
+
+            let j = 0;
+
+            for (let synapse of synapses) {
+                let delta = corrections[i] * synapse.input.impulse;
+
+                synapse.weight += delta;
+
+                synapses[j] = synapse;
+
+                j++;
+            }
+
+            output.inputs = synapses;
+            output.bias += corrections[i];
+
+            this.outputs[i] = output;
+
+            i++;
+        }
+
+        let hiddenFaults = new Array(this.interkneurons.length);
+
+        i = 0;
+
+        for (let interkneuron of this.interkneurons) {
+            let synapses = interkneuron.outputs;
+
+            fault = 0;
+
+            let j = 0;
+
+            for (let synapse of synapses) {
+                fault += synapse.weight * faults[j];
+
+                j++;
+            }
+
+            hiddenFaults[i] = fault;
+
+            i++;
+        }
+
+        i = 0;
+
+        corrections = new Array(this.interkneurons.length);
+
+        for (let interkneuron of this.interkneurons) {
+            correction = interkneuron.correction() * hiddenFaults[i] * this.learningRate;
+
+            corrections[i] = correction;
+
+            i++;
+        }
+
+        i = 0;
+
+        for (let interkneuron of this.interkneurons) {
+            let synapses = interkneuron.inputs;
+            let j = 0;
+
+            for (let synapse of synapses) {
+                let delta = corrections[i] * synapse.input.impulse;
+
+                synapse.weight += delta;
+
+                synapses[j] = synapse;
+
+                j++;
+            }
+
+            interkneuron.bias += corrections[i];
+            interkneuron.inputs = synapses;
+
+            this.interkneurons[i] = interkneuron;
+
+            i++;
+        }
     }
 
     visualize() {
