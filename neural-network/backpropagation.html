@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neural Network</title>
+</head>
+<body>
+    <div id="status"></div>
+    <svg id="canvas" width="800" height="400"></svg>
+    <div id="test">
+        <h4>Samples</h4>
+        <div id="samples"></div>
+        <h4>Result</h4>
+        <div id="results"></div>
+        <br>
+        <button id="btnTest">Stimulate</button>
+    </div>
+    
+    <script type="module">
+        import { KneuralNetwork } from "./KneuralNetwork.js";
+
+        let kneural = new KneuralNetwork({
+            input: 2,
+            topology: 4,
+            output: 1,
+        });
+
+        kneural.create();
+
+        let statusText = document.getElementById("status");
+        
+        let iterations = 1000;
+
+        let inputSamples = [];
+        let outputSamples = [];
+
+        inputSamples.push([0, 0]);
+        inputSamples.push([0, 1]);
+        inputSamples.push([1, 0]);
+        inputSamples.push([1, 1]);
+
+        outputSamples.push([0]);
+        outputSamples.push([1]);
+        outputSamples.push([1]);
+        outputSamples.push([0]);
+
+        statusText.textContent = "Training in progress...";
+
+        for (let i = 0; i < iterations; i++) {
+            let j = 0;
+
+            for (let inputSample of inputSamples) {
+                let outputSample = outputSamples[j];
+
+                kneural.train(inputSample, outputSample);
+
+                await sleep(0.1);
+
+                kneural.visualize();
+
+                j++;
+            }
+
+            statusText.textContent = "Training in progress... " + (i + 1) + "/" + iterations + " iteration";
+            console.log("Iteration: " + (i + 1));
+        }
+
+        statusText.textContent = "Training complete. See below for the inference results.";
+
+        let sampleContainer = document.getElementById("samples");
+
+        let i = 0;
+
+        for (let i = 0; i < inputSamples.length; i++) {
+            let inputSample = inputSamples[i];
+            let outputSample = outputSamples[i];
+            let element = document.createElement("div");
+
+            element.textContent = inputSample + " -> " + outputSample;
+
+            sampleContainer.appendChild(element);
+        }
+
+        function stimulate(sample) {
+            let resultsContainer = document.getElementById("results");
+
+            kneural.stimulate(sample);
+            kneural.pulsate();
+            kneural.visualize();
+
+            let result = sample + " -> " + kneural.stimuli();
+            
+            console.log(result);
+
+            let element = document.createElement("div");
+
+            element.textContent = result;
+
+            resultsContainer.appendChild(element);
+        }
+
+        async function runTest() {
+            stimulate([0, 0]);
+
+            await sleep(1000);
+
+            stimulate([0, 1]);
+
+            await sleep(1000);
+
+            stimulate([1, 0]);
+            
+            await sleep(1000);
+            
+            stimulate([1, 1]);
+        }
+
+        runTest();
+
+        document.getElementById("btnTest").addEventListener("click", () => {
+            runTest();
+        });
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+    </script>
+</body>
+</html>
