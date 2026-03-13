@@ -1,6 +1,5 @@
 class Kneuron {
     constructor() {
-        this.key = Math.ceil(Math.random() * 999999);
         this.inputs = [];
         this.outputs = [];
         this.bias = Math.random() * 2 - 1;
@@ -16,6 +15,7 @@ class Kneuron {
             }
 
             this.impulse += this.bias;
+            this.impulse = this.activation();
         }
     }
 
