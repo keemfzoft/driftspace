@@ -345,5 +345,18 @@ function floatToHexColor(value) {
     return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
 }
 
+function floatToHexColor2(value) {
+  // Clamp value to [0,1]
+  value = Math.min(Math.max(value, 0), 1);
+
+  // Scale to 24-bit color space (0x000000 – 0xFFFFFF)
+  let intVal = Math.floor(value * 0xFFFFFF);
+
+  // Convert to hex and pad with leading zeros
+  let hex = intVal.toString(16).padStart(6, "0");
+
+  return "#" + hex;
+}
+
 console.log(floatToHexColor(0.25)); // reddish tone
 console.log(floatToHexColor(0.75)); // greenish tone
