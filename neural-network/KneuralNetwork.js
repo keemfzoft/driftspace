@@ -248,6 +248,8 @@ export class KneuralNetwork {
     visualize() {
         const canvas = document.getElementById("canvas");
 
+        canvas.innerHTML = "";
+
         let y = 50;
 
         for (let kneuron of this.inputs) {
