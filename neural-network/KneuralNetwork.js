@@ -304,7 +304,7 @@ export class KneuralNetwork {
                 connector.setAttribute("x2", 50);
                 connector.setAttribute("y2", i * y2 + 50);
                 connector.setAttribute("stroke", "#333");
-                connector.setAttribute("stroke-width", 1);
+                connector.setAttribute("stroke-width", floatToWeight(synapse.weight));
 
                 canvas.appendChild(connector);
 
@@ -322,7 +322,7 @@ export class KneuralNetwork {
                 connector.setAttribute("x2", 250);
                 connector.setAttribute("y2", i * y2 + 50);
                 connector.setAttribute("stroke", "#333");
-                connector.setAttribute("stroke-width", 1);
+                connector.setAttribute("stroke-width", floatToWeight(synapse.weight));
 
                 canvas.appendChild(connector);
 
@@ -360,3 +360,11 @@ function floatToHexColor2(value) {
 
 console.log(floatToHexColor(0.25)); // reddish tone
 console.log(floatToHexColor(0.75)); // greenish tone
+
+function floatToWeight(value) {
+    // Clamp input between 0 and 1
+    let weight = Math.min(Math.max(parseFloat(value), 0), 1);
+
+    // Map to range 1–3
+    return 1 + (3 - 1) * weight;
+}
