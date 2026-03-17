@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            margin: 0;
+            background: url('./test-background.png') no-repeat center center fixed;
+            background-size: cover;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .box {
+            position: relative;
+            width: 800px;
+            height: 600px;
+        }
+
+        .frosted {
+            background: rgba(255, 255, 255, 0.2);         /* translucent white */
+            border-radius: 12px;                            /* rounded corners */
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);    /* subtle shadow */
+            backdrop-filter: blur(12px);                    /* frosted blur effect */
+            -webkit-backdrop-filter: blur(12px);            /* Safari support */
+            border: 1px solid rgba(255, 255, 255, 0.3);   /* glass-like border */
+        }
+    </style>
+</head>
+<body>
+    <div class="box frosted"></div>
+</body>
+</html>
