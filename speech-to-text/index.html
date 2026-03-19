@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speech to Text</title>
+</head>
+<body>
+    <button id="btnListen">Listen</button>
+    <button id="btnStop">Stop</button>
+    <div id="output"></div>
+
+    <script>
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+        if (SpeechRecognition) {
+            const recognition = new SpeechRecognition();
+
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.lang = "en-US";
+
+            recognition.onresult = (ev) => {
+                let transcript = "";
+
+                for (const result of ev.results) {
+                    transcript += result[0].transcript;
+                }
+
+                console.log(transcript);
+                document.getElementById("output").textContent = transcript;
+            }
+
+            recognition.onerror = (ev) => {
+                console.error("Speech recognition error: " + ev.error);
+            }
+
+            document.getElementById("btnListen").onclick = () => recognition.start();
+            document.getElementById("btnStop").onclick = () => recognition.stop();
+        } else {
+            console.log("Speech recognition not supported.");
+        }
+    </script>
+</body>
+</html>
