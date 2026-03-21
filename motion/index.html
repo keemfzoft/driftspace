@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            margin: 0;
+            background: url('./test-background.png') no-repeat center center fixed;
+            background-size: cover;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .box {
+            position: relative;
+            width: 800px;
+            height: 600px;
+            transform: scale(0);
+        }
+
+        .frosted {
+            background: rgba(255, 255, 255, 0.2);         /* translucent white */
+            border-radius: 12px;                            /* rounded corners */
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);    /* subtle shadow */
+            backdrop-filter: blur(12px);                    /* frosted blur effect */
+            -webkit-backdrop-filter: blur(12px);            /* Safari support */
+            border: 1px solid rgba(255, 255, 255, 0.3);   /* glass-like border */
+        }
+
+        .button {
+            background-color: #007BFF; /* Bootstrap blue */
+            color: white;
+            padding: 0.6em 1.2em;
+            border: none;
+            border-radius: 0.4em;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+
+        .button:active {
+            transform: scale(0.9);
+        }
+    </style>
+</head>
+<body>
+    <div class="box frosted"></div>
+    <div>
+        <button id="btnShow" class="button">Show</button>
+        <button id="btnHide" class="button">Hide</button>
+    </div>
+
+    <script type="module">
+        import { animate } from "motion";
+
+        document.getElementById("btnShow").onclick = () => {
+            animate(".box", {
+                scale: 1,
+                //opacity: 1,
+            }, {
+                duration: 0.4,
+                //ease: "easeInOut",
+            });
+        }
+
+        document.getElementById("btnHide").onclick = () => {
+            animate(".box", {
+                scale: 0,
+                //opacity: 0,
+            }, {
+                duration: 0.3,
+                //ease: "easeOutIn",
+            });
+        }
+    </script>
+</body>
+</html>
