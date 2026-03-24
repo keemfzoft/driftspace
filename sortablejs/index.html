@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sortable Cards</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 50px;
+        }
+
+        .card-container {
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin: 20px 0;
+        }
+
+        .card {
+            background-color: #fff;
+            border-radius: 8px;
+            width: 250px;
+            padding: 20px;
+            cursor: grab;
+
+            h3 {
+                margin-top: 0;
+                font-size: 1.2em;
+                color: #333;
+            }
+
+            p {
+                font-size: 0.95em;
+                color: #777;
+            }
+        }
+
+        h1 {
+            margin: 0;
+        }
+
+        small {
+            opacity: 0.5;
+        }
+
+        .hidden {
+            opacity: 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Sortable Card List</h1>
+    <small>Drag card to sort list</small>
+    <div id="cards" class="card-container">
+        <div class="card">
+            <h3>Item 1</h3>
+            <p>This is the description of item 1.</p>
+        </div>
+        <div class="card">
+            <h3>Item 2</h3>
+            <p>This is the description of item 2.</p>
+        </div>
+        <div class="card">
+            <h3>Item 3</h3>
+            <p>This is the description of item 3.</p>
+        </div>
+        <div class="card">
+            <h3>Item 4</h3>
+            <p>This is the description of item 4.</p>
+        </div>
+    </div>
+
+    <script type="module">
+        import Sortable from "sortablejs";
+
+        const el = document.getElementById("cards");
+
+        const sortable = new Sortable(el, {
+            animation: 500,
+            onStart: (ev) => {
+                ev.item.classList.add("hidden");
+            },
+            onEnd: (ev) => {
+                ev.item.classList.remove("hidden");
+            }
+        })
+    </script>
+</body>
+</html>
