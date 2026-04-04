@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XMLHttpRequest</title>
+</head>
+<body>
+    <script>
+        function request(method, url, data = null, headers = {}) {
+            return new Promise((resolve, reject) => {
+                const xhr = new XMLHttpRequest();
+
+                xhr.open(method, url, true);
+
+                for (const key in headers) {
+                    if (headers.hasOwnProperty(key)) {
+                        xhr.setRequestHeader(key, headers[key]);
+                    }
+                }
+
+                xhr.onreadystatechange = () => {
+                    if (xhr.readyState === XMLHttpRequest.DONE) {
+                        if (xhr.status >= 200 && xhr.status < 300) {
+                            resolve(JSON.parse(xhr.response));
+                        } else {
+                            reject({
+                                status: xhr.status,
+                                statusText: xhr.statusText,
+                                response: xhr.response,
+                            });
+                        }
+                    }
+                }
+
+                xhr.onerror = () => reject({
+                    status: xhr.status,
+                    statusText: xhr.statusText,
+                });
+
+                xhr.send(data);
+            });
+        }
+
+        request("GET", "https://driftspace.local/xmlhttprequest/items.php")
+            .then(response => {
+                console.log(response);
+            });
+        
+        request("GET", "https://driftspace.local/xmlhttprequest/test-error")
+            .catch(error => {
+                console.log(error);
+            });
+
+        const data = new FormData();
+
+        data.append("name", "Item 4");
+        data.append("description", "This is item 4");
+
+        request("POST", "https://driftspace.local/xmlhttprequest/create.php", data)
+            .then(response => {
+                console.log(response);
+            });
+    </script>
+
+    <script type="module">
+        import { Cloud } from "./Cloud.js";
+
+        let cloud = new Cloud();
+
+        cloud
+            .get("https://driftspace.local/xmlhttprequest/items.php")
+            .then(response => {
+                console.log(response);
+            });
+
+        cloud
+            .post("https://driftspace.local/xmlhttprequest/create.php", {
+                name: "Item 5",
+                description: "This is item 5"
+            })
+            .then(response => {
+                console.log(response);
+            });
+
+        cloud = new Cloud({
+            get: "https://driftspace.local/xmlhttprequest/items.php",
+            post: "https://driftspace.local/xmlhttprequest/create.php",
+        });
+
+        cloud.get().then(response => {
+            console.log(response);
+        });
+
+        cloud.post({ name: "Item 6", description: "This is item 6" }).then(response => {
+            console.log(response);
+        })
+    </script>
+</body>
+</html>
